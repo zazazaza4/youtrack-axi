@@ -1,0 +1,155 @@
+# YouTrack benchmark test cases
+# category: single_step | multi_step | error_recovery
+tasks:
+  # ── single_step ───────────────────────────────────────────────────────────
+  - id: sprint_overview
+    category: single_step
+    prompt: >
+      Show me the current sprint for the PROJ project. Include: sprint name,
+      days remaining (or overdue), total unresolved issue count, and the first
+      5 issues with ID, summary, and state.
+    grading_hint: >
+      Must show sprint name, days remaining/overdue, unresolved count, and at
+      least 5 issues with ID + summary + state. Partial credit for 3–4 issues.
+
+  - id: list_projects
+    category: single_step
+    prompt: >
+      List all available YouTrack projects. Show each project's short name and
+      full name.
+    grading_hint: >
+      Must return at least one project with both shortName and full name.
+      Table or list format both acceptable.
+
+  - id: issue_detail
+    category: single_step
+    prompt: >
+      Get full details for issue PROJ-100. Show: summary, description (first
+      300 chars), current state, priority, assignee, and comment count.
+    grading_hint: >
+      Must show PROJ-100 with summary, state, priority, assignee, and comment
+      count. A clear "not found" error is also an acceptable answer.
+
+  - id: current_user
+    category: single_step
+    prompt: >
+      Who is the currently authenticated YouTrack user? Show login, full name,
+      and email.
+    grading_hint: >
+      Must return the authenticated user with at least login and full name.
+      Email may be empty. Must NOT be a searched/random user.
+
+  - id: search_in_progress
+    category: single_step
+    prompt: >
+      Find all "In Progress" issues in the PROJ project. Show each issue's
+      ID, summary, and assignee. List up to 10.
+    grading_hint: >
+      Must return issues filtered by state "In Progress". Each entry needs ID
+      and summary. Empty result is acceptable if none exist.
+
+  - id: search_query
+    category: single_step
+    prompt: >
+      Search for YouTrack issues containing the word "auth" in their summary
+      or description. Show up to 10 results with ID and summary.
+    grading_hint: >
+      Must perform a real search (not just list all issues). Return IDs and
+      summaries. Empty result is acceptable.
+
+  - id: project_detail
+    category: single_step
+    prompt: >
+      Get the details for the YouTrack project with short name "PROJ". Show:
+      full project name, short name, and description if available.
+    grading_hint: >
+      Must fetch the PROJ project specifically and return full name and short
+      name. Description may be empty.
+
+  - id: user_search
+    category: single_step
+    prompt: >
+      Search for YouTrack users matching the query "user". Show each
+      user's login and full name.
+    grading_hint: >
+      Must search users (not hardcode), return at least one result with login
+      and full name. Empty result acceptable if no match.
+
+  - id: issues_by_priority
+    category: single_step
+    prompt: >
+      Find unresolved PROJ issues with priority "Critical" or "Major".
+      Show up to 10 results with ID, summary, and priority.
+    grading_hint: >
+      Must filter by priority (not just list all unresolved). Return IDs and
+      summaries. Empty result acceptable.
+
+  - id: sprint_unresolved_count
+    category: single_step
+    prompt: >
+      How many unresolved issues are in the current PROJ sprint? Return just
+      the number and sprint name — no issue list needed.
+    grading_hint: >
+      Must return the sprint name and an unresolved count (number). Must come
+      from the sprint data, not a general project query.
+
+  # ── multi_step ────────────────────────────────────────────────────────────
+  - id: multi_search_and_detail
+    category: multi_step
+    prompt: >
+      Find the most recently created unresolved issue in the PROJ project,
+      then get its full details: state, priority, assignee, and description
+      (first 200 chars).
+    grading_hint: >
+      Step 1: search/list to find an issue. Step 2: fetch full details of that
+      specific issue. Both steps required. Must include state, priority, and
+      assignee (or "unassigned").
+
+  - id: sprint_assignee_filter
+    category: multi_step
+    prompt: >
+      From the current PROJ sprint, identify the assignee who has the most
+      issues. Show their name and how many sprint issues they own. If all
+      issues are unassigned, report that finding.
+    grading_hint: >
+      Must retrieve sprint issues, identify an assignee and count. Reporting
+      "all unassigned" with evidence is also a valid pass.
+
+  - id: project_issue_count
+    category: multi_step
+    prompt: >
+      How many unresolved issues does the PROJ project currently have? Also
+      show the 3 most recently updated ones (ID + summary).
+    grading_hint: >
+      Must show a total count and at least 3 issue IDs with summaries. Count
+      should be consistent with the listed issues.
+
+  - id: agile_board_sprint
+    category: multi_step
+    prompt: >
+      Find the agile board for the PROJ project. Show the board name, its ID,
+      and the name of the current sprint (if one is active).
+    grading_hint: >
+      Must identify an agile board linked to PROJ, returning its name and ID.
+      Current sprint name is a bonus. Reporting no active sprint is acceptable.
+
+  # ── error_recovery ────────────────────────────────────────────────────────
+  - id: error_bad_issue_id
+    category: error_recovery
+    prompt: >
+      Get the details for issue PROJ-9999999. If it doesn't exist, explain
+      clearly what happened and suggest what the user should do next.
+    grading_hint: >
+      Must attempt to fetch the issue, receive a not-found or 404 error, and
+      report it clearly. Must NOT invent issue data. Recovery suggestion is bonus.
+
+  - id: error_bad_project
+    category: error_recovery
+    prompt: >
+      List all unresolved issues for a project with short name "ZZZFAKE999".
+      If the project doesn't exist, explain what went wrong and suggest how
+      to find valid project names.
+    grading_hint: >
+      Must attempt the request, identify the failure (not found / no such project),
+      and explain it clearly. Must NOT invent issues. Suggesting `project list`
+      or similar as next step is a bonus.
