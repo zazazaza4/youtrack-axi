@@ -1,0 +1,26 @@
+{
+  "name": "youtrack-axi",
+  "version": "0.1.0",
+  "description": "YouTrack CLI for AI agents — AXI compliant",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "youtrack-axi": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@inquirer/prompts": "^7.0.0",
+    "commander": "^12.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^2.0.0"
+  }
+}
